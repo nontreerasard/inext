@@ -1,18 +1,17 @@
-import { 
-    collection, 
+import {
+    collection,
     getDocs,
-    query, 
-    where, 
+    query,
+    where,
     updateDoc,
     doc,
     getDoc,
     setDoc,
 } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     console.log("DOM Content Loaded");
-    
-    // ตรวจสอบว่า Firebase พร้อมใช้งาน
+
     if (window.db) {
         console.log("Firebase is available");
         loadEquipmentSummary();
@@ -23,11 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Add functions to window object for onclick access
 window.viewModelDetails = viewModelDetails;
 window.borrowEquipment = borrowEquipment;
 window.returnEquipment = returnEquipment;
-window.closeBorrowModal = function() {
+window.closeBorrowModal = function () {
     const modal = document.getElementById('borrowModal');
     if (modal) {
         document.getElementById('borrowForm').reset();
@@ -36,16 +34,14 @@ window.closeBorrowModal = function() {
     }
 };
 
-
-// ปรับปรุงฟังก์ชัน loadEquipmentSummary
 async function loadEquipmentSummary() {
-    try {        
+    try {
         console.log("Starting loadEquipmentSummary...");
         console.log("window.db:", window.db);
-        
+
         const productsRef = collection(window.db, 'products');
         const querySnapshot = await getDocs(productsRef);
-        
+
         console.log("Query snapshot:", querySnapshot.size);
 
         if (querySnapshot.empty) {
@@ -54,14 +50,13 @@ async function loadEquipmentSummary() {
         }
 
         const data = {};
-        
+
         querySnapshot.forEach(doc => {
             const item = doc.data();
             console.log("Document data:", item);
 
-            // ใช้ค่าเริ่มต้นสำหรับ category ถ้าไม่มี
-            const category = 'รายชื่ออุปกรณ์'; // ใช้ค่าเริ่มต้นเลย
-            const model = item.model;  // แก้ไขบรรทัดนี้
+            const category = 'รายชื่ออุปกรณ์';
+            const model = item.model;
 
             if (!model) {
                 console.warn("Skipping item - missing model:", item);
@@ -71,7 +66,7 @@ async function loadEquipmentSummary() {
             if (!data[category]) {
                 data[category] = [];
             }
-            
+
             const modelIndex = data[category].findIndex(m => m.model === model);
             if (modelIndex === -1) {
                 data[category].push({
@@ -88,7 +83,7 @@ async function loadEquipmentSummary() {
         });
 
         console.log("Processed data:", data);
-        
+
         if (Object.keys(data).length === 0) {
             console.warn("No data processed!");
             return;
@@ -101,7 +96,6 @@ async function loadEquipmentSummary() {
     }
 }
 
-// แสดงข้อมูลสรุป
 function displaySummary(data) {
     console.log("DisplaySummary called with data:", data);
     const container = document.querySelector('.category-grid');
@@ -136,22 +130,19 @@ function displaySummary(data) {
     container.innerHTML = html;
 }
 
-// ค้นหาอุปกรณ์
 function setupSearch() {
     const searchInput = document.getElementById('searchInput');
     if (!searchInput) return;
 
-    searchInput.addEventListener('input', function(e) {
+    searchInput.addEventListener('input', function (e) {
         const searchTerm = e.target.value.toLowerCase().trim();
-        
-        // ค้นหาเฉพาะในหน้าหลัก
+
         const modelItems = document.getElementsByClassName('model-item');
         Array.from(modelItems).forEach(item => {
             const modelName = item.querySelector('.model-name').textContent.toLowerCase();
             const shouldShow = modelName.includes(searchTerm);
             item.style.display = shouldShow ? '' : 'none';
 
-            // จัดการการแสดงผล category-card
             const parentCard = item.closest('.category-card');
             if (parentCard) {
                 const hasVisibleItems = Array.from(parentCard.getElementsByClassName('model-item'))
@@ -162,55 +153,52 @@ function setupSearch() {
     });
 }
 
-// แก้ไขฟังก์ชัน viewModelDetails เพื่อรักษาค่าการค้นหาค่าการค้นหา
 async function viewModelDetails(modelName) {
     try {
         // ใช้ Firebase v9 syntax
         const productsRef = collection(window.db, 'products');
         const q = query(productsRef, where('model', '==', modelName));
         const snapshot = await getDocs(q);
-        
+
         if (snapshot.empty) {
             console.log("No devices found for model:", modelName);
             return;
         }
-        
+
         const data = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         }));
-        
+
         const modal = document.getElementById('detailModal');
         const modalTitle = document.getElementById('modalTitle');
         const modalContent = document.getElementById('modalContent');
-        
-        // สร้าง HTML สำหรับ modal content
+
         const modalHTML = `
             <div class="modal-search">
                 <input type="text" id="detailSearchInput" placeholder="ค้นหา Serial Number, ผู้ยืม...">
             </div>
             ${createTableHTML(data)}
         `;
-        
+
         modalTitle.textContent = `รายละเอียด ${modelName}`;
         modalContent.innerHTML = modalHTML;
         modal.style.display = 'block';
         document.body.classList.add('modal-open');
 
-        // เพิ่ม event listener สำหรับการค้นหา
         const searchInput = document.getElementById('detailSearchInput');
         if (searchInput) {
-            searchInput.addEventListener('input', function(e) {
+            searchInput.addEventListener('input', function (e) {
                 const searchTerm = e.target.value.toLowerCase().trim();
                 const rows = document.querySelectorAll('.detail-row');
                 let hasResults = false;
 
                 rows.forEach(row => {
                     const searchableText = [
-                        row.cells[0].textContent, // Serial Number
-                        row.cells[2].textContent, // ผู้ยืม
-                        row.cells[3].textContent, // วันที่ยืม
-                        row.cells[4].textContent  // กำหนดคืน
+                        row.cells[0].textContent,
+                        row.cells[2].textContent,
+                        row.cells[3].textContent,
+                        row.cells[4].textContent 
                     ].join(' ').toLowerCase();
 
                     if (searchableText.includes(searchTerm)) {
@@ -221,10 +209,9 @@ async function viewModelDetails(modelName) {
                     }
                 });
 
-                // จัดการข้อความไม่พบผลการค้นหา
                 const tbody = modal.querySelector('.details-table tbody');
                 const existingNoResults = tbody.querySelector('.no-results');
-                
+
                 if (!hasResults) {
                     if (!existingNoResults) {
                         const noResultsRow = document.createElement('tr');
@@ -248,7 +235,6 @@ async function viewModelDetails(modelName) {
     }
 }
 
-// เพิ่มฟังก์ชันสร้างตาราง
 function createTableHTML(data) {
     return `
         <div class="details-table-container">
@@ -273,10 +259,10 @@ function createTableHTML(data) {
                             <td>${item.borrower_name || '-'}</td>
                             <td>${item.borrow_date ? new Date(item.borrow_date).toLocaleDateString('th-TH') : '-'}</td>
                             <td>${item.return_date ? new Date(item.return_date).toLocaleDateString('th-TH') : '-'}</td>
-                            <td>${item.borrower_id 
-                                ? `<button class="return-btn" onclick="returnEquipment('${item.serial_number}')">คืน</button>`
-                                : `<button class="borrow-btn" onclick="borrowEquipment('${item.serial_number}')">ยืม</button>`
-                            }</td>
+                            <td>${item.borrower_id
+            ? `<button class="return-btn" onclick="returnEquipment('${item.serial_number}')">คืน</button>`
+            : `<button class="borrow-btn" onclick="borrowEquipment('${item.serial_number}')">ยืม</button>`
+        }</td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -285,10 +271,9 @@ function createTableHTML(data) {
     `;
 }
 
-// ฟังก์ชันการยืม
 async function borrowEquipment(serialNumber) {
     try {
-        // เปิด borrow modal
+
         const borrowModal = document.getElementById('borrowModal');
         document.getElementById('serialNumber').value = serialNumber;
         borrowModal.style.display = 'block';
@@ -298,10 +283,9 @@ async function borrowEquipment(serialNumber) {
     }
 }
 
-// แก้ไขฟังก์ชัน returnEquipment
 async function returnEquipment(serialNumber) {
     try {
-        // ค้นหาอุปกรณ์ที่จะคืน - ใช้ Firebase v9 syntax
+
         const productsRef = collection(window.db, 'products');
         const q = query(productsRef, where('serial_number', '==', serialNumber));
         const snapshot = await getDocs(q);
@@ -310,7 +294,6 @@ async function returnEquipment(serialNumber) {
             throw new Error('ไม่พบอุปกรณ์นี้');
         }
 
-        // อัพเดทข้อมูล - ใช้ Firebase v9 syntax
         const docRef = doc(window.db, 'products', snapshot.docs[0].id);
         await updateDoc(docRef, {
             borrower_id: null,
@@ -320,8 +303,7 @@ async function returnEquipment(serialNumber) {
         });
 
         alert('คืนอุปกรณ์สำเร็จ');
-        
-        // รีเฟรชข้อมูล
+
         loadEquipmentSummary();
         const modelName = document.getElementById('modalTitle').textContent.replace('รายละเอียด ', '');
         viewModelDetails(modelName);
@@ -331,8 +313,7 @@ async function returnEquipment(serialNumber) {
     }
 }
 
-// Event Listeners
-document.getElementById('borrowForm')?.addEventListener('submit', async function(e) {
+document.getElementById('borrowForm')?.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     try {
@@ -344,12 +325,10 @@ document.getElementById('borrowForm')?.addEventListener('submit', async function
             return_date: document.getElementById('returnDate').value
         };
 
-        // Validation
         if (!formData.borrower_id || !formData.borrower_name || !formData.borrow_date || !formData.return_date) {
             throw new Error('กรุณากรอกข้อมูลให้ครบถ้วน');
         }
 
-        // ตรวจสอบวันที่
         const borrowDate = new Date(formData.borrow_date);
         const returnDate = new Date(formData.return_date);
         const today = new Date();
@@ -363,7 +342,6 @@ document.getElementById('borrowForm')?.addEventListener('submit', async function
             throw new Error('วันที่คืนต้องมากกว่าวันที่ยืม');
         }
 
-        // ใช้ Firebase v9 syntax
         const productsRef = collection(window.db, 'products');
         const q = query(productsRef, where('serial_number', '==', formData.serial_number));
         const snapshot = await getDocs(q);
@@ -372,7 +350,6 @@ document.getElementById('borrowForm')?.addEventListener('submit', async function
             throw new Error('ไม่พบอุปกรณ์นี้');
         }
 
-        // อัพเดทข้อมูล - ใช้ Firebase v9 syntax
         const docRef = doc(window.db, 'products', snapshot.docs[0].id);
         await updateDoc(docRef, {
             borrower_id: formData.borrower_id,
@@ -384,10 +361,9 @@ document.getElementById('borrowForm')?.addEventListener('submit', async function
         alert('ยืมอุปกรณ์สำเร็จ');
         document.getElementById('borrowModal').style.display = 'none';
         document.body.classList.remove('modal-open');
-        
-        // รีเฟรชหน้าและอัพเดทข้อมูล
+
         loadEquipmentSummary();
-        // ถ้า modal รายละเอียดเปิดอยู่ ให้โหลดข้อมูลใหม่
+
         const detailModal = document.getElementById('detailModal');
         if (detailModal.style.display === 'block') {
             const modelName = document.getElementById('modalTitle').textContent.replace('รายละเอียด ', '');
@@ -400,14 +376,14 @@ document.getElementById('borrowForm')?.addEventListener('submit', async function
 });
 
 // Reset form when closing modal
-document.querySelector('#borrowModal .close')?.addEventListener('click', function() {
+document.querySelector('#borrowModal .close')?.addEventListener('click', function () {
     document.getElementById('borrowForm').reset();
     document.getElementById('borrowModal').style.display = 'none';
     document.body.classList.remove('modal-open');
 });
 
 // Cancel button handler
-document.querySelector('#borrowModal .cancel-btn')?.addEventListener('click', function() {
+document.querySelector('#borrowModal .cancel-btn')?.addEventListener('click', function () {
     document.getElementById('borrowForm').reset();
     document.getElementById('borrowModal').style.display = 'none';
     document.body.classList.remove('modal-open');
@@ -417,15 +393,15 @@ document.querySelector('#borrowModal .cancel-btn')?.addEventListener('click', fu
 
 // Close modal handlers
 document.querySelectorAll('.close').forEach(btn => {
-    btn.onclick = function() {
+    btn.onclick = function () {
         this.closest('.modal').style.display = 'none';
-        document.body.classList.remove('modal-open');  // ลบ class เมื่อปิด modal
+        document.body.classList.remove('modal-open');
     }
 });
 
-window.onclick = function(event) {
+window.onclick = function (event) {
     if (event.target.classList.contains('modal')) {
         event.target.style.display = 'none';
-        document.body.classList.remove('modal-open');  // ลบ class เมื่อปิด modal
+        document.body.classList.remove('modal-open');
     }
 }
