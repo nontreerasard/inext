@@ -1,0 +1,1104 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 1. Variables */
+:root {
+    /* Layout */
+    --container-width: 1200px; /* เพิ่มความกว้างของ container */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 0.75rem;
+    --spacing-base: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 2.5rem;
+    --stats-min-width: 200px; /* กำหนดความกว้างขั้นต่ำของ stat item */
+    --main-width: 1000px; /* ปรับความกว้างหลักให้พอดี */
+    --search-width: 600px; /* ความกว้างของช่องค้นหา */
+    --gap-between-items: 1rem; /* ระยะห่างระหว่าง items */
+    --card-spacing: 1.25rem; /* ระยะห่างภายในการ์ด */
+    
+    /* Borders & Shadows */
+    --radius-sm: 6px;
+    --radius-base: 8px;
+    --radius-lg: 12px;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-base: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.15);
+    
+    /* Colors */
+    --primary: #0063f7;
+    --primary-light: #33a5ff;
+    --primary-gradient: linear-gradient(135deg, #00265f, #2d6d9e);
+    --success: #22c55e;
+    --success-gradient: linear-gradient(135deg, #22c55e, #4ade80);
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --warning-gradient: linear-gradient(135deg, #f59e0b, #fbbf24);
+    --background: #f8fafc;
+    --background-dark: #f1f5f9;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --border: #e2e8f0;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    
+    /* Typography */
+    --font-sm: 0.875rem;
+    --font-base: 1rem;
+    --font-lg: 1.25rem;
+    --font-xl: 1.75rem;
+    --line-height-base: 1.5;
+}
+
+/* 2. Reset & Base */
+body {
+    font-family: 'Kanit', sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: var(--line-height-base);
+    margin: 0;
+    font-size: var(--font-base);
+}
+
+/* 3. Layout Containers */
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+    width: 100%;
+}
+
+/* Main Layout */
+.main {
+    padding: var(--spacing-base);
+    max-width: var(--main-width);
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 4. Header */
+header {
+    background: var(--primary-gradient);
+    padding: var(--spacing-xl) var(--spacing-lg);
+    color: white;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+header::after {
+    width: 100%;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%);
+    background-size: 3px 3px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 5. Search Component */
+.search-container {
+    width: 100%;
+    max-width: var(--search-width);
+    margin: var(--spacing-lg) auto;  /* เพิ่มระยะห่าง */
+    padding: var(--spacing-base);
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-base);
+    position: relative;
+    z-index: 10;
+}
+
+.search-container input {
+    width: 100%;
+    height: 45px;
+    padding: 0 var(--spacing-lg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-base);
+    font-size: var(--font-base);
+    transition: all 0.3s ease;
+}
+
+.search-container input:focus {
+    box-shadow: 0 0 0 3px rgba(0,99,247,0.1);
+}
+
+/* 6. Stats Display */
+.stats-container {
+    width: 100%;
+    max-width: var(--main-width);
+    margin: 0 auto 1.5rem; /* ลดระยะห่างด้านล่าง */
+    padding: var(--card-spacing);
+    display: flex;
+    justify-content: center;
+    gap: var(--gap-between-items);
+}
+
+.stat-item {
+    flex: 1;
+    text-align: center;
+    padding: var(--card-spacing);
+    background: white;
+    border-radius: var(--radius-base);
+    transition: transform 0.3s ease;
+    min-width: var(--stats-min-width);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+    margin: 0; /* ลบ margin */
+}
+
+.stat-item:hover {
+    transform: translateY(-2px);
+}
+
+.stat-value-all {
+    font-size: 3rem; /* เพิ่มขนาดตัวเลข */
+    font-weight: 600;
+    color: #22c55e;
+    margin: var(--spacing-base) 0;
+}
+
+.stat-value-borrowed {
+    font-size: 3rem; /* เพิ่มขนาดตัวเลข */
+    font-weight: 600;
+    color: #f59e0b;
+    margin: var(--spacing-base) 0;
+}
+
+.stat-label {
+    font-size: var(--font-lg);
+    color: var(--text-light);
+}
+
+/* 7. Category Cards */
+.category-card {
+    background: var(--card-bg);
+    padding: var(--card-spacing);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-base);
+    margin-bottom: var(--gap-between-items);
+    position: relative;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    width: 100%;
+    margin: 0; /* ลบ margin ที่ไม่จำเป็น */
+}
+
+.category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+}
+
+.category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
+}
+
+.category-title {
+    font-size: var(--font-xl);
+    font-weight: 600;
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--border);
+    margin-bottom: var(--spacing-md);
+}
+
+.category-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--gap-between-items);
+    background: var(--background);
+    padding: var(--card-spacing);
+    border-radius: var(--radius-base);
+    margin: var(--gap-between-items) auto; /* เปลี่ยนเป็น auto เพื่อจัดกึ่งกลาง */
+    width: 90%; /* กำหนดความกว้างให้แคบลงเล็กน้อย */
+    justify-content: center; /* จัดให้ grid อยู่กึ่งกลาง */
+    align-items: center; /* จัดให้เนื้อหาอยู่กึ่งกลางแนวตั้ง */
+}
+
+.category-stats > div {
+    text-align: center;
+    padding: var(--spacing-base);
+    background: white; /* เพิ่มพื้นหลังให้ชัดเจน */
+    border-radius: var(--radius-base);
+    box-shadow: var(--shadow-sm);
+    min-width: 120px; /* กำหนดความกว้างขั้นต่ำ */
+}
+
+/* ปรับปรุง Category Grid */
+.category-grid {
+    max-width: var(--main-width);
+    margin: 0 auto;
+    display: grid;
+    gap: var(--gap-between-items);
+    width: 100%;
+    padding: 0;
+    place-items: center;
+    padding: var(--spacing-base);
+}
+
+/* 8. Model Items */
+.model-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-between-items);
+    padding: var(--spacing-sm);
+    margin-top: var(--gap-between-items);
+}
+
+.model-item {
+    background: var(--card-bg);
+    padding: var(--card-spacing);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    padding-bottom: 4rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: var(--gap-between-items);
+    width: 100%;
+    margin: 0; /* ลบ margin ที่ไม่จำเป็น */
+}
+
+.model-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.model-stats-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--gap-between-items);
+    background: var(--background);
+    border-radius: var(--radius-base);
+    padding: var(--card-spacing);
+    align-items: center;
+}
+
+/* 9. Modal */
+.modal {
+    display: none;  /* เริ่มต้นให้ซ่อนไว้ */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background: white;
+    width: 95%;
+    max-width: 1200px;      /* เพิ่มความกว้างสูงสุด */
+    margin: 8vh auto;     /* เปลี่ยนจาก 15vh เป็น 8vh */
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    max-height: 90vh; /* กำหนดความสูงสูงสุด */
+    overflow-y: auto; /* เพิ่ม scrollbar แนวตั้ง */
+}
+
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+.close {
+    position: absolute;
+    right: var(--spacing-md);
+    top: var(--spacing-base);
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-light);
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: var(--text);
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 10. Responsive Design */
+
+/* Large Desktop */
+@media (min-width: 1400px) {
+    :root {
+        --container-width: 1320px;
+        --main-width: 1200px;
+    }
+}
+
+/* Desktop */
+@media (max-width: 1200px) {
+    :root {
+        --container-width: 100%;
+        --main-width: 90%;
+    }
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+    .category-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .details-table {
+        font-size: 14px;
+    }
+    .modal-content {
+        width: 90%;
+        margin: 2vh auto;
+    }
+}
+
+/* Mobile Large */
+@media (max-width: 768px) {
+    :root {
+        --spacing-lg: 1rem;
+        --spacing-base: 0.75rem;
+        --gap-between-items: 0.75rem;
+    }
+
+    header {
+        padding: var(--spacing-lg);
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    .stats-container {
+        flex-direction: column;
+        padding: var(--spacing-base);
+    }
+
+    .stat-item {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .category-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .details-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .modal-content {
+        padding: var(--spacing-lg);
+        margin: 5% var(--spacing-sm);
+        width: auto;
+    }
+
+    .search-container {
+        margin: 0 auto 1rem;
+        width: 90%;
+    }
+
+    .details-table {
+        font-size: var(--font-sm);
+    }
+
+    .details-table th,
+    .details-table td {
+        padding: var(--spacing-sm);
+    }
+
+    .borrow-btn,
+    .return-btn {
+        min-width: 60px;
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+}
+
+/* Mobile Small */
+@media (max-width: 480px) {
+    .stat-value-all,
+    .stat-value-borrowed {
+        font-size: 2rem;
+    }
+
+    .category-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .borrow-btn,
+    .return-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+        min-width: 60px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .submit-btn,
+    .cancel-btn {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    .details-table th,
+    .details-table td {
+        padding: 8px;
+        font-size: 12px;
+    }
+}
+
+/* Button Enhancement */
+.view-details-btn {
+    background: var(--primary-gradient);
+    color: white;
+    padding: var(--spacing-base) var(--spacing-lg);
+    border-radius: var(--radius-base);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-top: var(--spacing-base);
+    width: calc(100% - var(--spacing-md));
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.view-details-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,99,247,0.2);
+}
+
+/* Table Enhancement */
+.details-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    border-radius: var(--radius-base);
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    min-width: 800px;  /* กำหนดความกว้างขั้นต่ำ */
+}
+
+.details-table th {
+    background: var(--background);
+    padding: var(--spacing-base);
+    font-weight: 600;
+    background-color: rgb(182, 182, 182);
+    color: white;
+    padding: var(--spacing-md) var(--spacing-base);
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.details-table td {
+    padding: var(--spacing-base);
+    border-bottom: 1px solid var(--border);
+    padding: var(--spacing-base) var(--spacing-md);
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle; /* จัดให้เนื้อหาอยู่กึ่งกลางแนวตั้ง */
+    height: 50px; /* กำหนดความสูงที่แน่นอน */
+    padding: 8px;
+}
+
+.details-table tr:hover {
+    background: var(--background);
+}
+
+/* เพิ่ม Grid Layout ที่ดีขึ้น */
+.grid-layout {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+/* ปรับปรุง Typography Spacing */
+.model-name {
+    font-size: var(--font-base);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Borrow Modal Styles */
+.borrow-modal {
+    display: none;  /* เริ่มต้นให้ซ่อนไว้ */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.borrow-modal .modal-content {
+    max-width: 500px;
+    margin: 10vh auto;
+}
+
+.borrow-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-base);
+    width: 100%;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #1e293b;
+    font-weight: 500;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    padding: var(--spacing-base);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-base);
+    font-size: var(--font-base);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #0052cc;
+    box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+}
+
+.form-group input[type="date"] {
+    color: #1e293b;
+    font-family: inherit;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: center;
+    width: 100%;
+    display: flex;
+    gap: var(--spacing-base);
+    margin-top: var(--spacing-lg);
+    display: flex;
+    justify-content: center;  /* จัดกึ่งกลาง */
+    gap: var(--spacing-base);
+    margin-top: var(--spacing-lg);
+    padding: 0 var(--spacing-lg);  /* เพิ่ม padding ด้านข้าง */
+}
+
+.submit-btn, .cancel-btn {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn {
+    background: #0052cc;
+    color: white;
+}
+
+.submit-btn:hover {
+    background: #0043a7;
+}
+
+.cancel-btn {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.cancel-btn:hover {
+    background: #cbd5e1;
+}
+
+/* Animation */
+.modal-content {
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Button Styles */
+.borrow-btn, .return-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 80px;  /* กำหนดความกว้างขั้นต่ำของปุ่ม */
+    padding: var(--spacing-sm) var(--spacing-md);
+    height: 100%;
+    min-height: 35px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 35px;
+    padding: 8px 12px;
+    white-space: nowrap;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.borrow-btn {
+    background-color: #0052cc;
+    color: white;
+}
+
+.borrow-btn:hover {
+    background-color: #0043a7;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.return-btn {
+    background-color: #f97316;
+    color: white;
+}
+
+.return-btn:hover {
+    background-color: #ea580c;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background: var(--card-bg);
+    margin: 5% auto;
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-base);
+    width: 90%;
+    max-width: 1000px;
+    position: relative;
+    box-shadow: var(--shadow-base);
+    background: white;
+    width: 95%;
+    max-width: 1200px;      /* เพิ่มความกว้างสูงสุด */
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    padding: var(--spacing-xl);
+    margin: 8vh auto;     /* เปลี่ยนจาก 15vh เป็น 8vh */
+}
+
+.close {
+    position: absolute;
+    right: var(--spacing-md);
+    top: var(--spacing-base);
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-light);
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: var(--text);
+}
+
+/* Table Styles */
+.details-table-container {
+    position: relative;  /* เพิ่ม position relative */
+    margin: var(--spacing-lg) 0;
+    width: 100%;
+    padding: var(--spacing-sm);  /* เพิ่ม padding รอบตาราง */
+    overflow-x: auto; /* สำหรับ horizontal scroll ถ้าตารางกว้างเกินไป */
+}
+
+.details-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0 auto;
+}
+
+/* ปรับความกว้างของคอลัมน์ */
+.details-table th:first-child,
+.details-table td:first-child {
+    width: 25%;  /* Serial Number */
+}
+
+.details-table th:nth-child(2),
+.details-table td:nth-child(2) {
+    width: 15%;  /* สถานะ */
+}
+
+.details-table th:nth-child(3),
+.details-table td:nth-child(3) {
+    width: 20%;  /* ผู้ยืม */
+}
+
+.details-table th:nth-child(4),
+.details-table td:nth-child(4),
+.details-table th:nth-child(5),
+.details-table td:nth-child(5) {
+    width: 15%;  /* วันที่ */
+}
+
+.details-table th:last-child,
+.details-table td:last-child {
+    width: 150px;  /* กำหนดความกว้างที่แน่นอน */
+    min-width: 150px;
+    padding: 8px;
+    text-align: center; /* จัดกึ่งกลางข้อความ */
+}
+
+/* ปรับขนาดปุ่มในตาราง */
+.borrow-btn,
+.return-btn {
+    width: 80px;
+    height: 35px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: white;
+}
+
+.borrow-btn {
+    background-color: #0052cc;
+}
+
+.return-btn {
+    background-color: #f97316;
+}
+
+/* ปรับแต่งส่วนหัวตารางให้ fixed */
+.details-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+/* ปรับการจัดวางข้อมูลในตาราง */
+.details-table th,
+.details-table td {
+    text-align: center;  /* จัดให้ข้อความอยู่ตรงกลางแนวนอน */
+    vertical-align: middle;  /* จัดให้ข้อความอยู่ตรงกลางแนวตั้ง */
+    padding: var(--spacing-sm) var(--spacing-base);
+    height: 50px;
+}
+
+/* ปรับแต่งส่วนหัวตาราง */
+.details-table th {
+    background: rgb(0, 2, 99);
+    color: white;
+    font-weight: 500;
+    white-space: nowrap;
+    padding: var(--spacing-md) var(--spacing-lg);
+    text-align: center;  /* จัดให้หัวข้ออยู่ตรงกลาง */
+}
+
+/* ปรับแต่งปุ่มในตาราง */
+.borrow-btn,
+.return-btn {
+    margin: 0 auto;  /* จัดให้ปุ่มอยู่ตรงกลาง */
+    display: inline-block;
+}
+
+/* ปรับความกว้างคอลัมน์ */
+.details-table th:first-child,
+.details-table td:first-child {
+    width: 15%;  /* Serial Number */
+}
+
+.details-table th:nth-child(2),
+.details-table td:nth-child(2) {
+    width: 10%;  /* สถานะ */
+}
+
+.details-table th:nth-child(3),
+.details-table td:nth-child(3) {
+    width: 12%;  /* รหัสผู้ยืม */
+}
+
+.details-table th:nth-child(4),
+.details-table td:nth-child(4) {
+    width: 15%;  /* ชื่อผู้ยืม */
+}
+
+.details-table th:nth-child(5),
+.details-table td:nth-child(5),
+.details-table th:nth-child(6),
+.details-table td:nth-child(6) {
+    width: 12%;  /* วันที่ */
+}
+
+.details-table th:last-child,
+.details-table td:last-child {
+    width: 120px;  /* การดำเนินการ */
+    text-align: center;
+}
+
+/* ปรับการแสดงผลของเซลล์ในตาราง */
+.details-table td {
+    vertical-align: middle; /* จัดให้เนื้อหาอยู่กึ่งกลางแนวตั้ง */
+    height: 50px; /* กำหนดความสูงที่แน่นอน */
+    padding: 8px;
+}
+
+.details-table th {
+    background: rgb(0, 2, 99);
+    color: white;
+    font-weight: 500;
+    white-space: nowrap;
+    padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.details-table tr:nth-child(even) {
+    background: var(--background);
+}
+
+.details-table tr:hover {
+    background: var(--background-dark);
+}
+
+/* Form in Modal */
+.form-group {
+    margin-bottom: var(--spacing-base);
+    width: 100%;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'Kanit', sans-serif;
+    width: 100%;
+    padding: var(--spacing-base);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-base);
+    font-size: var(--font-base);
+}
+
+.form-actions {
+    display: flex;
+    gap: var (--spacing-base);
+    margin-top: var(--spacing-lg);
+    display: flex;
+    gap: var(--spacing-base);
+    margin-top: var(--spacing-lg);
+    display: flex;
+    justify-content: center;  /* จัดกึ่งกลาง */
+    gap: var(--spacing-base);
+    margin-top: var(--spacing-lg);
+    padding: 0 var(--spacing-lg);  /* เพิ่ม padding ด้านข้าง */
+}
+
+/* Borrow Form Styles */
+.borrow-modal .modal-content {
+    max-width: 500px;  /* ลดความกว้างลง */
+    margin: 10vh auto;  /* เพิ่มระยะห่างด้านบนให้สูงขึ้น */
+    padding: var(--spacing-lg) var(--spacing-xl);
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: visible;  /* ป้องกัน scrollbar */
+}
+
+.borrow-modal h2 {
+    font-size: 1.5rem;  /* ปรับขนาดหัวข้อให้กะทัดรัด */
+    color: var(--text);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--primary);
+    text-align: center;
+}
+
+#borrowForm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-base);  /* ลดระยะห่างระหว่าง elements */
+    width: 100%;
+    margin: 0 auto;
+}
+
+#borrowForm .form-group {
+    margin-bottom: var(--spacing-sm);  /* ลดระยะห่างด้านล่าง */
+}
+
+#borrowForm label {
+    font-size: 0.9rem;  /* ปรับขนาดฉลากให้เล็กลง */
+    margin-bottom: var(--spacing-xs);
+}
+
+#borrowForm input {
+    padding: 8px 12px;  /* ปรับ padding ให้กะทัดรัด */
+    height: 35px;  /* กำหนดความสูงที่แน่นอน */
+}
+
+#borrowForm .form-actions {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-base);
+    gap: var(--spacing-base);
+}
+
+#borrowForm .submit-btn,
+#borrowForm .cancel-btn {
+    padding: 8px 16px;  /* ปรับขนาดปุ่มให้กะทัดรัด */
+    height: 35px;  /* กำหนดความสูงที่แน่นอน */
+}
+
+/* ปรับแต่ง animation */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.borrow-modal .modal-content {
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .borrow-modal .modal-content {
+        width: 90%;
+        padding: var(--spacing-lg);
+    }
+
+    #borrowForm {
+        gap: var(--spacing-base);
+    }
+
+    #borrowForm .form-actions {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    #borrowForm .submit-btn,
+    #borrowForm .cancel-btn {
+        width: 100%;
+    }
+}
+
+/* Modal Search */
+.modal-search {
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+}
+
+.modal-search input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: 'Kanit', sans-serif;
+}
+
+.modal-search input:focus {
+    outline: none;
+    border-color: #0063f7;
+    box-shadow: 0 0 0 2px rgba(0,99,247,0.1);
+}

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iNEXT Stock System</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/public/stylefirst.css">
+    
+    <!-- Import Firebase modules -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyApN2OxPBW-fH4MpYqzUNxZvTAGm78k1Zw",
+            authDomain: "inextstock-65678.firebaseapp.com",
+            projectId: "inextstock-65678",
+            storageBucket: "inextstock-65678.appspot.com",
+            messagingSenderId: "507532765169",
+            appId: "1:507532765169:web:18e6a5ec9514cb1b6d8650",
+            measurementId: "G-06RZXCRN97"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        window.db = db;
+
+        // Test connection
+        async function testConnection() {
+            try {
+                const querySnapshot = await getDocs(collection(db, 'products'));
+                console.log('Connection test:', {
+                    success: true,
+                    documentsFound: querySnapshot.size,
+                    sampleDoc: querySnapshot.docs[0]?.data()
+                });
+            } catch (error) {
+                console.error('Connection test failed:', error);
+            }
+        }
+
+        // Run test when page loads
+        testConnection();
+    </script>
+    
+    <!-- Your main script -->
+    <script type="module" src="/public/script.js"></script>
+</head>
+<body>
+    <header>
+        <h1>iNEXTBroadband Stock</h1>
+    </header>
+
+    <main class="main">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="🔍 ค้นหาอุปกรณ์...">
+        </div>
+        
+        <div id="stockStats" class="stats-container">
+            <!-- จะถูกเติมด้วย JavaScript -->
+        </div>
+        
+        <div class="category-grid">
+            <!-- จะถูกเติมด้วย JavaScript -->
+        </div>
+        
+        <!-- Modal สำหรับแสดงรายละเอียด -->
+        <div id="detailModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="modalTitle"></h2>
+                <div id="modalContent"></div>
+            </div>
+        </div>
+        <!-- Modal สำหรับฟอร์มยืม -->
+        <div id="borrowModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>ยืมอุปกรณ์</h2>
+                <form id="borrowForm">
+                    <div class="form-group">
+                        <label>Serial Number:</label>
+                        <input type="text" id="serialNumber" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>รหัสผู้ยืม:</label>
+                        <input type="text" id="borrowerId" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ชื่อผู้ยืม:</label>
+                        <input type="text" id="borrowerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>วันที่ยืม:</label>
+                        <input type="date" id="borrowDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>กำหนดคืน:</label>
+                        <input type="date" id="returnDate" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn">ยืนยันการยืม</button>
+                        <button type="button" class="cancel-btn" onclick="closeBorrowModal()">ยกเลิก</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
